@@ -1,11 +1,27 @@
 <header>
-    <h1>Todo List</h1>
-    <form class="new-task" ng-submit="$ctrl.addTask($ctrl.newTask)">
+    <h1>Todo List ( {{$ctrl.incompleteCount}} )</h1>
+
+    <label class="hide-completed">
+        <input type="checkbox" ng-model="$ctrl.hideCompleted"/>
+        Hide Completed Tasks
+    </label>
+
+    <login-buttons></login-buttons>
+
+    <form class="new-task" ng-submit="$ctrl.addTask($ctrl.newTask)" ng-show="$ctrl.currentUser">
         <input type="text" name="text" placeholder="Type to add new tasks" ng-model="$ctrl.newTask">
     </form>
 </header>
 <ul>
-    <li ng-repeat="task in $ctrl.tasks">
-        {{task.text}}
+<!-- if a task is checked off the class of checked is applied and it has a line strike through -->
+    <li ng-repeat="task in $ctrl.tasks" ng-class="{'checked': task.checked, 'private': task.private}">
+        <button class="delete" ng-click="$ctrl.removeTask(task)">&times;</button>
+        <input type="checkbox" ng-checked="task.checked" ng-click="$ctrl.setChecked(task)" class="toggle-checked"/> 
+        <span class="text">
+            <strong>{{task.username}}</strong> - {{task.text}}
+        </span>
+        <button class="toggle-private" ng-click="$ctrl.setPrivate(task)" ng-show="task.owner === $ctrl.currentUser._id">
+            {{task.private == true ? "Private" : "Public"}}
+        </button>
     </li>
 </ul>
